@@ -1,0 +1,11 @@
+const fs=require('node:fs');const assert=require('node:assert/strict');
+const s=fs.readFileSync(require('node:path').join(__dirname,'..','game.js'),'utf8');
+const keys=[...s.matchAll(/^ ([a-z][a-z0-9_]*):\{name:/gm)].map(x=>x[1]);
+assert.equal(keys.length,46,'46 weapon definitions expected');
+assert.equal(new Set(keys).size,46,'unique weapon keys');
+const enemies=s.match(/const ENEMY_WEAPONS=\[([^\]]+)\]/)[1].match(/'[^']+'/g).map(x=>x.slice(1,-1));
+const owned=s.match(/const INITIAL_OWNED=\[([^\]]+)\]/)[1].match(/'[^']+'/g).map(x=>x.slice(1,-1));
+assert.equal(enemies.length,16);assert.equal(owned.length,30);
+for(const k of [...enemies,...owned])assert(keys.includes(k),`missing ${k}`);
+assert(!enemies.some(k=>owned.includes(k)),'loot and default sets disjoint');
+console.log('Weapon catalog: 46 definitions, 30 initial, 16 loot, all IDs valid');

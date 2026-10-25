@@ -1,0 +1,1 @@
+const fs=require('fs'),assert=require('assert');const s=fs.readFileSync(require('path').join(__dirname,'..','game.js'),'utf8');for(const token of ['function requestQRF()','function resolveQRF()','qrfArrivalTurn:turn','qrfCharges=1','QRF_DELAY=2','qrfPending&&turn>=qrfPending.arrival'])assert(s.includes(token),token);console.log('QRF static checks OK');
